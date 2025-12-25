@@ -7,7 +7,7 @@ if ($xdate == "")  $xdate = date("Y-m-d", strtotime("-7 days"));
 if ($xdate2 == "") $xdate2 = date ("Y-m-d", strtotime("-1 days"));
 if ($xperpage < 5) $xperpage = 200;
 if ($xperpage > 200) $xperpage = 200;
-if ($sdate =="") $sdate=cre;
+if ($sdate =="") $sdate="cre";
 
 ?>
 <HTML>
@@ -126,17 +126,24 @@ $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 for ($i=0;$i<$num;$i++) {
 	$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-	$uquery = "SELECT * FROM users WHERE id = $r[createwho];";
+	$who = $r['createwho'];
+	$count = $r['count'];
+	$uquery = "SELECT * FROM users WHERE id = $who;";
 	$uresult = pg_query($db, $uquery);
-	$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-	$a = $ur[first];
-	if ($ur[first] && $ur[last]) { $a .= " "; }
-	$b = $ur[last];
-	$a .= $b[0];
-	##$a = $a[0];
-	if (!$a) { $a = $ur[username]; }
-	$a = strtolower(htmlentities($a));
-	echo "<tr><td>$a</td><td align=right>$r[count]</td></tr>";
+
+	if ($uresult && pg_num_rows($uresult) > 0) {
+		$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
+		$a = $ur['first'];
+		if ($ur['first'] && $ur['last']) { $a .= " "; }
+		$b = $ur['last'];
+		$a .= $b[0];
+		##$a = $a[0];
+		if (!$a) { $a = $ur['username']; }
+		$a = strtolower(htmlentities($a));
+		echo "<tr><td>$a</td><td align=right>$count</td></tr>";
+	} else {
+		echo "<tr><td>Unknown creator</td><td align=right>$count</td></tr>";
+	}
 }
 ?>
 </table>

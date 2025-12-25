@@ -59,9 +59,9 @@ $r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
 
 if ($xaddcomment && trim($xcomment)) {
 
-	if (get_magic_quotes_gpc()) {
+	// if (get_magic_quotes_gpc()) {
 		$xcomment = stripslashes($xcomment);
-	}
+	// }
 	$xcomment = SanitizeFromWord($xcomment);
 	$xcomment = pg_escape_string($xcomment);
 
@@ -78,7 +78,7 @@ echo "<p><TABLE border=0 cellpadding=0 cellspacing=0 bgcolor=#FFFFFF><TR valign=
 
 echo "<TD valign=middle><B>MUSIC CATALOGUE LOOKUP</B></TD>";
 
-if ($user[admin] == 't' || ($user[cdeditor] == "t" && $r[status] != 2)) {
+if ($user['admin'] == 't' || ($user['cdeditor'] == "t" && $r['status'] != 2)) {
 	echo "<TD valign=middle><form action=cdedit.php method=post target=_Blank accept-charset=\"UTF-8\">";
 	echo "<input type=hidden name=xref value=$xref>";
 	echo "&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit name=xdoedit value=\"Edit This Entry\">";
@@ -91,52 +91,52 @@ echo "<p><TABLE border=0 cellpadding=4 cellspacing=0 bgcolor=#CCCCFF><TR valign=
 echo "<p><TABLE border=1 cellpadding=1 cellspacing=0 bgcolor=#DDDDFF>";
 
 echo "<TR><TD valign=top><b>ID Number</b></TD><TD>";
-$a = sprintf("%07.0f", $r[id]);
+$a = sprintf("%07.0f", $r['id']);
 echo $a;
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Artist</b></TD><TD>";
-$a = htmlentities(stripslashes($r[artist]));
+$a = htmlentities(stripslashes($r['artist']));
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Title</b></TD><TD>";
-$a = htmlentities(stripslashes($r[title]));
+$a = htmlentities(stripslashes($r['title']));
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Release&nbsp;Year</b></TD><TD>";
-$a = $r[year];
+$a = $r['year'];
 if ($a == 0) { $a = ""; }
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Genre</b></TD><TD>";
-$a = htmlentities(stripslashes($r[genre]));
+$a = htmlentities(stripslashes($r['genre']));
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Company</b></TD><TD>";
-$a = htmlentities(stripslashes($r[company]));
+$a = htmlentities(stripslashes($r['company']));
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Country</b></TD><TD>";
-$a = htmlentities(stripslashes($r[cpa]));
+$a = htmlentities(stripslashes($r['cpa']));
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Arrival Date</b></TD><TD>";
-if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
+if ($r['arrivaldate'] == "0001-01-01") { $a = ""; }
 else {
-	$thedayN = strtotime($r[arrivaldate]);
+	$thedayN = strtotime($r['arrivaldate']);
 	$a = date ("d/m/Y", $thedayN);
 }
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Format</b></TD><TD>";
-$b = $r[format];
+$b = $r['format'];
 $a = "Unknown";
 if ($b == 1) { $a = "Compact Disc"; }
 if ($b == 2) { $a = '7" Vinyl'; }
@@ -151,7 +151,7 @@ echo "</TD></TR>";
 echo "</TABLE></TD><TD><TABLE border=1 cellpadding=1 cellspacing=0 bgcolor=#DDDDFF>";
 
 echo "<TR><TD valign=top><b>Compliation</b></TD><TD>";
-$b = $r[compilation];
+$b = $r['compilation'];
 $a = "";
 if ($b == 1) { $a = "No"; }
 if ($b == 2) { $a = "Yes"; }
@@ -159,7 +159,7 @@ if ($a) { echo htmlentities($a); } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Demo</b></TD><TD>";
-$b = $r[demo];
+$b = $r['demo'];
 $a = "";
 if ($b == 1) { $a = "No"; }
 if ($b == 2) { $a = "Yes"; }
@@ -167,7 +167,7 @@ if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Local</b></TD><TD>";
-$b = $r[local];
+$b = $r['local'];
 $a = "";
 if ($b == 1) { $a = "No"; }
 if ($b == 2) { $a = "Yes"; }
@@ -176,7 +176,7 @@ if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Female</b></TD><TD>";
-$b = $r[female];
+$b = $r['female'];
 $a = "";
 if ($b == 1) { $a = "No"; }
 if ($b == 2) { $a = "Yes"; }
@@ -185,13 +185,13 @@ if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR><TD valign=top><b>Copies</b></TD><TD>";
-$a = $r[copies];
+$a = $r['copies'];
 if ($a == "0") { $a = ""; }
 if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR bgcolor=#DDDDDD><TD valign=top><b>Status</b></TD><TD>";
-$b = $r[status];
+$b = $r['status'];
 $a = "Unchecked";
 if ($b == 1) { $a = "Incomplete"; }
 if ($b == 2) { $a = "Final"; }
@@ -199,29 +199,29 @@ if ($a) { echo $a; } else { echo "&nbsp;"; }
 echo "</TD></TR>";
 
 echo "<TR bgcolor=#DDDDDD><TD valign=top><b>Created</b></TD><TD>";
-if ($r[createwhen]) { $b = date ("d/m/Y", $r[createwhen]); }
+if ($r['createwhen']) { $b = date ("d/m/Y", $r['createwhen']); }
 else { $b = "Unknown"; }
 $uquery = "SELECT * FROM users WHERE id = $q$r[createwho]$q;";
 $uresult = pg_query($db, $uquery);
 $unum = pg_num_rows($uresult);
 if ($unum == 1) {
 	$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-	if ($ur[first] || $ur[last]) { $a = $ur[first] . " " . $ur[last]; }
-	else $a = $ur[username];
+	if ($ur['first'] || $ur['last']) { $a = $ur['first'] . " " . $ur['last']; }
+	else $a = $ur['username'];
 }
 else { $a = "Unknown"; }
 echo "$b ($a)</TD></TR>";
 
 echo "<TR bgcolor=#DDDDDD><TD valign=top><b>Modified</b></TD><TD>";
-if ($r[modifywhen]) { $b = date ("d/m/Y", $r[modifywhen]); }
+if ($r['modifywhen']) { $b = date ("d/m/Y", $r['modifywhen']); }
 else { $b = "Unknown"; }
 $uquery = "SELECT * FROM users WHERE id = $q$r[modifywho]$q;";
 $uresult = pg_query($db, $uquery);
 $unum = pg_num_rows($uresult);
 if ($unum == 1) {
 	$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-	if ($ur[first] || $ur[last]) { $a = $ur[first] . " " . $ur[last]; }
-	else $a = $ur[username];
+	if ($ur['first'] || $ur['last']) { $a = $ur['first'] . " " . $ur['last']; }
+	else $a = $ur['username'];
 }
 else { $a = "Unknown"; }
 echo "$b ($a)</TD></TR>";
@@ -239,12 +239,12 @@ $istitle = 0;
 $islength = 0;
 for ($i=0;$i<$num;$i++) {
 	$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-	$tracknum[$i] = $r[tracknum];
-	$trackartist[$i] = stripslashes($r[trackartist]);
+	$tracknum[$i] = $r['tracknum'];
+	$trackartist[$i] = stripslashes($r['trackartist']);
 	if ($trackartist[$i]) { $isartist = 1; }
-	$tracktitle[$i] = stripslashes($r[tracktitle]);
+	$tracktitle[$i] = stripslashes($r['tracktitle']);
 	if ($tracktitle[$i]) { $istitle = 1; }
-	$ttt = $r[tracklength];
+	$ttt = $r['tracklength'];
 	if ($ttt) { $islength = 1; }
 	$min = 0;
 	$min = floor($ttt/60);
@@ -252,7 +252,7 @@ for ($i=0;$i<$num;$i++) {
 	$c = sprintf("%1d", $min) . ":" . sprintf("%02d", $sec);
 	if ($ttt == 0) { $c = "&nbsp"; }
 	$tracklength[$i] = $c;
-	$thetracknum = sprintf("%02.0f", $r[tracknum]);
+	$thetracknum = sprintf("%02.0f", $r['tracknum']);
 	if (is_readable("$mp3lopath/$cdnum/$cdnum-$thetracknum.mp3")) $mp3lothere[$i] = 1;
 	if ($local == 1) {if (is_readable("$mp3hipath/$cdnum/$cdnum-$thetracknum.mp3")) $mp3hithere[$i] = 1;}
 	##if (is_readable("$mp3hipath/$cdnum/$cdnum-$thetracknum.mp3")) $mp3hithere[$i] = 1;
@@ -294,13 +294,13 @@ if (true) {
 		$unum = pg_num_rows($uresult);
 		if ($unum == 1) {
 			$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-			$a = htmlentities($ur[first]);
-			if ($ur[first] && $ur[last]) { $a .= " "; }
-			$a .= htmlentities($ur[last]);
-			if (!$a) { $a = htmlentities($ur[username]); }
+			$a = htmlentities($ur['first']);
+			if ($ur['first'] && $ur['last']) { $a .= " "; }
+			$a .= htmlentities($ur['last']);
+			if (!$a) { $a = htmlentities($ur['username']); }
 		}
 		else { $a = "Unknown"; }
-		if ($r[createwhen]) { $b = date ("d/m/Y", $r[modifywhen]); }
+		if ($r['createwhen']) { $b = date ("d/m/Y", $r['modifywhen']); }
 		else { $b = "Unknown"; }
 		$c = $r['comment'];
 		# $c = preg_replace ("/[\n\r]+/", "\n", trim($r[comment]));

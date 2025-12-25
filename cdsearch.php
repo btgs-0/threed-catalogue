@@ -85,9 +85,9 @@ if (isset($xdosearch)) {
 		for ($i=0;$i<$counting;$i++) {
 			if ($i == 0) { $query .= " WHERE"; }
 			if ($i > 0) { $query .= " AND"; }
-			if (get_magic_quotes_gpc()) {
+			//if (get_magic_quotes_gpc()) {
 				$words[$i] = stripslashes($words[$i]);
-			}
+			//}
 			$words[$i] = pg_escape_string($words[$i]);
 			$query = $query . " (cd.artist ~~* $q%$words[$i]%$q OR cd.title ~~* $q%$words[$i]%$q OR cd.genre ~~* $q%$words[$i]%$q OR cd.company ~~* $q%$words[$i]%$q OR cdtrack.tracktitle ~~* $q%$words[$i]%$q OR cdtrack.trackartist ~~* $q%$words[$i]%$q OR cdcomment.comment ~~* $q%$words[$i]%$q)";
 		}
@@ -134,13 +134,13 @@ if (isset($xdosearch)) {
 			echo ">";
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 			
-			$a = htmlentities(stripslashes($r[artist]));
+			$a = htmlentities(stripslashes($r['artist']));
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities(stripslashes($r[title]));
+			$a = htmlentities(stripslashes($r['title']));
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
@@ -149,9 +149,9 @@ if (isset($xdosearch)) {
                         //}
 			echo "</td>\n";
 			
-			if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
+			if ($r['arrivaldate'] == "0001-01-01") { $a = ""; }
 			else {
-				$thedayN = strtotime($r[arrivaldate]);
+				$thedayN = strtotime($r['arrivaldate']);
 				$a = date ("d/m/Y", $thedayN);
 			}
 			echo "<td align=center>";
@@ -161,12 +161,12 @@ if (isset($xdosearch)) {
 			
 			echo "<td width=1 align=center>";
 			echo "<a HREF=cdshow.php?";
-			echo "xref=" . $r[cdidx] . ">Show<a>";
+			echo "xref=" . $r['cdidx'] . ">Show<a>";
 			
-			if ($user[admin] == "t" || ($user[cdeditor] == "t" && $r[status] != 2)) {
+			if ($user['admin'] == "t" || ($user['cdeditor'] == "t" && $r['status'] != 2)) {
 				echo "&nbsp;";
 				echo "<a HREF=cdedit.php?";
-				echo "xref=" . $r[cdidx] . " target=_blank>Edit<a>";
+				echo "xref=" . $r['cdidx'] . " target=_blank>Edit<a>";
 			}
 			
 			echo "</td></TR>\n";

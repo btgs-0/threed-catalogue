@@ -16,7 +16,7 @@ header("Expires: 0");?>
 <BODY>
 
 <?php
-if (!$admin && $user[cdeditor] != "t") {
+if (!$admin && $user['cdeditor'] != "t") {
 	echo "<p><font color=red><b>You do not have the necessary privilages to do that!</b></font><p>";
 	echo "</BODY></HTML>";
 	exit;
@@ -44,7 +44,7 @@ if ($xadd) {
 	$kquery = "SELECT id FROM cd WHERE OID = $q$lastoid$q;";
 	$kresult = pg_query($db, $kquery);
 	$r = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-	$xref = $r[id];
+	$xref = $r['id'];
 	
 	
 	$trackcount = count($xtrackartist);
