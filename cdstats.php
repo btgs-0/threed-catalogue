@@ -16,7 +16,7 @@ header("Expires: 0");?>
 <BODY onload="document.forms[0].xtext.focus()">
 
 <?php
-if (!$admin && $user[cdeditor] != "t") {
+if (!$admin && $user['cdeditor'] != "t") {
 	echo "<p><font color=red><b>You do not have the necessary privilages to do that!</b></font><p>";
 	echo "</BODY></HTML>";
 	exit;
