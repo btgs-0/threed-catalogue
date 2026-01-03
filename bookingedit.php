@@ -528,35 +528,43 @@ if ($admin || $adminbook) {
 		if ($r['parent']) { $theid = $r['parent']; }
 		$wquery = "SELECT * FROM booking WHERE id = $q$theid$q
 				OR parent = $theid ORDER by id;";
+				
 		$wresult = pg_query($db, $wquery);
-		$wnum = pg_num_rows($wresult);
-		echo "<p><table border=0 cellspacing=2 cellpadding=2 bgcolor=white>";
-		echo "<tr bgcolor=lightgrey>";
-		echo "<th align=left>Action</th>";
-		echo "<th align=left>Who did it</th>";
-		echo "<th align=left>When it was done</th>";
-		echo "<th align=left>Resource</th>";
-		echo "<th align=left>Who For</th>";
-		echo "<th align=left>Date</th>";
-		echo "<th align=left>Start Time</th>";
-		echo "<th align=left>End Time</th>";
-		echo "<th align=left>Text</th>";
-		echo "</tr>";
-		for ($j=0;$j<$wnum;$j++) {
-			$r = pg_Fetch_array($wresult, $j, PGSQL_ASSOC);
-			$datetime = date ("d/m/Y h:ia", $r['modifywhen']);
-			$status = "Changed";
-			if ($j == 0) { $status = "Created"; }
-			if ($r['active'] == 'x') { $status = "Deleted"; }
-			if ($r['active'] == 'y') { $status = "Current"; }
-			echo '<tr align=left bgcolor=lightgrey>';
-			echo "<td>$status</td><td>".$name[$r['modifywho']]."</td><td>$datetime</td>";
-			echo "<td>".$bthing[$r['bookedthing']]."</td><td>".$name[$r['createwho']]."</td><td>$r[date]</td>";
-			echo "<td>$r[starttime]</td><td>$r[endtime]</td><td>".htmlentities($r['text']);
-			echo "</td>";
-			echo '</tr>';
+
+		if ($wresult) {
+			$wnum = pg_num_rows($wresult);
+
+			if ($wnum > 0) { 
+				echo "<p><table border=0 cellspacing=2 cellpadding=2 bgcolor=white>";
+				echo "<tr bgcolor=lightgrey>";
+				echo "<th align=left>Action</th>";
+				echo "<th align=left>Who did it</th>";
+				echo "<th align=left>When it was done</th>";
+				echo "<th align=left>Resource</th>";
+				echo "<th align=left>Who For</th>";
+				echo "<th align=left>Date</th>";
+				echo "<th align=left>Start Time</th>";
+				echo "<th align=left>End Time</th>";
+				echo "<th align=left>Text</th>";
+				echo "</tr>";
+
+				for ($j=0;$j<$wnum;$j++) {
+					$r = pg_Fetch_array($wresult, $j, PGSQL_ASSOC);
+					$datetime = date ("d/m/Y h:ia", $r['modifywhen']);
+					$status = "Changed";
+					if ($j == 0) { $status = "Created"; }
+					if ($r['active'] == 'x') { $status = "Deleted"; }
+					if ($r['active'] == 'y') { $status = "Current"; }
+					echo '<tr align=left bgcolor=lightgrey>';
+					echo "<td>$status</td><td>".$name[$r['modifywho']]."</td><td>$datetime</td>";
+					echo "<td>".$bthing[$r['bookedthing']]."</td><td>".$name[$r['createwho']]."</td><td>$r[date]</td>";
+					echo "<td>$r[starttime]</td><td>$r[endtime]</td><td>".htmlentities($r['text']);
+					echo "</td>";
+					echo '</tr>';
+				}
+				echo "</TABLE>";
+			}
 		}
-		echo "</TABLE>";
 	}
 }
 ?>
