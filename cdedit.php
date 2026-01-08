@@ -130,29 +130,39 @@ if ($xdocreate) {
 			VALUES ($q$xartist$q, $q$xtitle$q, $q$xyear$q,
 			$q$xgenre$q, $q$xcompany$q, $q$xcpa$q, $q$xarrivaldate$q,
 			$q$xcopies$q, $q$xcompilation$q, $q$xdemo$q, $q$xlocal$q,
-			$q$xfemale$q, $q$cid$q, $q$timenow$q, $q$cid$q, $q$timenow$q, $q$xcomment$q, $q$xstatus$q, $q$xformat$q);";
+			$q$xfemale$q, $q$cid$q, $q$timenow$q, $q$cid$q, $q$timenow$q, $q$xcomment$q, $q$xstatus$q, $q$xformat$q) RETURNING id;";
 	//echo "Insert query is $uquery";
 	//exit;
 	$uresult = pg_query($db, $uquery);
-	$lastoid = pg_last_oid($uresult);
-	$kquery = "SELECT id FROM cd WHERE OID = $q$lastoid$q;";
-	$kresult = pg_query($db, $kquery);
-	$r = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-	$xref = $r['id'];
-	$trackcount = count($xtrackartist);
-	for ($i=0;$i<$trackcount;$i++) {
-//		Format track artist & title to save in database
-		$ytrackartist[$i]=pg_escape_string($xtrackartist[$i]);
-		$ytracktitle[$i]=pg_escape_string($xtracktitle[$i]);
-		$ii = $i+1;
-		$ttquery = "INSERT INTO cdtrack (cdid, tracknum, tracktitle, trackartist, tracklength)
-		VALUES ($xref, $ii,
-		$q$ytracktitle[$i]$q,
-		$q$ytrackartist[$i]$q,
-		$q$xtracklength[$i]$q);";
-		$ttresult = pg_query($db, $ttquery);
+
+	if ($uresult && pg_num_rows($uresult) > 0) {
+		$id_of_new_row = pg_fetch_row($uresult)[0];
+		$trackcount = count($xtrackartist);
+		
+		for ($i=0;$i<$trackcount;$i++) {
+			// Format track artist & title to save in database
+			$ytrackartist[$i]=pg_escape_string($xtrackartist[$i]);
+			$ytracktitle[$i]=pg_escape_string($xtracktitle[$i]);
+			$ii = $i+1;
+			$ttquery = "INSERT INTO cdtrack (
+				cdid, 
+				tracknum, 
+				tracktitle, 
+				trackartist, 
+				tracklength)
+			VALUES (
+				$id_of_new_row, 
+				$ii,
+				$q$ytracktitle[$i]$q,
+				$q$ytrackartist[$i]$q,
+				$q$xtracklength[$i]$q
+			);";
+
+			$ttresult = pg_query($db, $ttquery);
+		}
+
+		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$id_of_new_row);
 	}
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref);
 }
 
 if ($xdosave || $xdoswap) {
