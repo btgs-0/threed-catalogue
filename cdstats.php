@@ -16,7 +16,7 @@ header("Expires: 0");?>
 <BODY onload="document.forms[0].xtext.focus()">
 
 <?php
-if (!$admin && $user[cdeditor] != "t") {
+if (!$admin && $user['cdeditor'] != "t") {
 	echo "<p><font color=red><b>You do not have the necessary privilages to do that!</b></font><p>";
 	echo "</BODY></HTML>";
 	exit;
@@ -33,7 +33,7 @@ if (!$admin && $user[cdeditor] != "t") {
 $query = "SELECT count(*) FROM cd";
 $result = pg_query($db, $query);
 $r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-echo $r[count];
+echo $r['count'];
 ?>
 </td></tr>
 <tr><td>Number of Tracks</td>
@@ -42,7 +42,7 @@ echo $r[count];
 $query = "SELECT count(*) FROM cdtrack";
 $result = pg_query($db, $query);
 $r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-echo $r[count];
+echo $r['count'];
 ?>
 </td></tr>
 <tr><td>Total Number of Comments</td>
@@ -51,7 +51,7 @@ echo $r[count];
 $query = "SELECT count(*) FROM cdcomment";
 $result = pg_query($db, $query);
 $r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-echo $r[count];
+echo $r['count'];
 ?>
 </td></tr>
 <tr><td>Number of Entries with Comments</td>
@@ -74,15 +74,23 @@ $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 for ($i=0;$i<$num;$i++) {
 	$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-	$uquery = "SELECT * FROM users WHERE id = $r[createwho];";
+	$who = $r['createwho'];
+	$count = $r['count'];
+	$uquery = "SELECT * FROM users WHERE id = $who;";
 	$uresult = pg_query($db, $uquery);
-	$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-	$a = $ur[first];
-	if ($ur[first] && $ur[last]) { $a .= " "; }
-	$a .= $ur[last];
-	if (!$a) { $a = $ur[username]; }
-	$a = htmlentities($a);
-	echo "<tr><td>$a</td><td align=right>$r[count]</td></tr>";
+
+	if ($uresult && pg_num_rows($uresult) > 0) { 
+		$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
+		$a = $ur['first'];
+		if ($ur['first'] && $ur['last']) { $a .= " "; }
+		$a .= $ur['last'];
+		if (!$a) { $a = $ur['username']; }
+		$a = htmlentities($a);
+		echo "<tr><td>$a</td><td align=right>$count</td></tr>";
+	} else {
+		echo "<tr><td>Unknown creator</td><td align=right>$count</td></tr>";
+	}
+	
 }
 ?>
 </table>
@@ -98,7 +106,7 @@ $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 for ($i=0;$i<$num;$i++) {
 	$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-	$tt[$r[count]]++;
+	$tt[$r['count']]++;
 }
 ksort($tt);
 foreach ($tt as $xt => $xc) {
@@ -116,8 +124,8 @@ $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 for ($i=0;$i<$num;$i++) {
 	$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-	$a = date ("d/m/Y", $r[createwhen]);
-	$b = date ("Y/m/d", $r[createwhen]);
+	$a = date ("d/m/Y", $r['createwhen']);
+	$b = date ("Y/m/d", $r['createwhen']);
 	$d[$a]++;
 	$c[$b] = $b;
 }

@@ -57,11 +57,11 @@ $nresult = pg_query($db, $nquery);
 $nnum = pg_num_rows($nresult);
 for ($i=0;$i<$nnum;$i++) {
 	$nr = pg_Fetch_array($nresult, $i, PGSQL_ASSOC);
-	$id[$i] = $nr[id];
-	$a = $nr[first];
-	if ($nr[first] && $nr[last]) { $a .= " "; }
-	$a .= $nr[last];
-	if (!$a) { $a = $nr[username]; }
+	$id[$i] = $nr['id'];
+	$a = $nr['first'];
+	if ($nr['first'] && $nr['last']) { $a .= " "; }
+	$a .= $nr['last'];
+	if (!$a) { $a = $nr['username']; }
 	$namex[$i] = htmlentities($a);
 	$nameU[$i] = strtoupper($a);
 }
@@ -161,9 +161,9 @@ if ($xdosearch) {
 	$album = preg_replace("/,/"," ",$xalbum);
 	$album = preg_replace("/ +/"," ",$album);
 	$album = trim($album);
-	if (get_magic_quotes_gpc()) {
+	// if (get_magic_quotes_gpc()) {
 		$album = stripslashes($album);
-	}
+	// }
 	if ($album) {
 		$album = explode(" ", $album);
 		for ($i=0;$i<count($album);$i++) {
@@ -255,24 +255,24 @@ if ($xdosearch) {
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 
 			
-			$a = htmlentities($r[artist]);
+			$a = htmlentities($r['artist']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[title]);
+			$a = htmlentities($r['title']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
-			if ($r[digital] != 'f') {
+			if ($r['digital'] != 'f') {
                           echo ' <span style="color: #ff9933;">[DIGITAL]</span>';
                         }
 			echo "</td>\n";
 			
-			if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
+			if ($r['arrivaldate'] == "0001-01-01") { $a = ""; }
 			else {
-				$thedayN = strtotime($r[arrivaldate]);
+				$thedayN = strtotime($r['arrivaldate']);
 				$a = date ("d/m/Y", $thedayN);
 			}
 			echo "<td align=center>";
@@ -284,12 +284,12 @@ if ($xdosearch) {
 			
 			echo "<td width=1 align=center>";
 			echo "<a HREF=cdshow.php?";
-			echo "xref=" . $r[theid] . ">Show<a>";
+			echo "xref=" . $r['theid'] . ">Show<a>";
 			
-			if ($user[admin] == "t" || ($user[cdeditor] == "t" && $r[status] != 2)) {
+			if ($user['admin'] == "t" || ($user['cdeditor'] == "t" && $r['status'] != 2)) {
 				echo "&nbsp;";
 				echo "<a HREF=cdedit.php?";
-				echo "xref=" . $r[theid] . " target=_blank>Edit<a>";
+				echo "xref=" . $r['theid'] . " target=_blank>Edit<a>";
 			}
 			
 			echo "</td></TR>\n";

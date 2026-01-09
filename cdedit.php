@@ -16,7 +16,7 @@ header("Expires: 0");?>
 <BODY onload="document.forms[0].xtext.focus()">
 
 <?php
-if (!$admin && $user[cdeditor] != "t") {
+if (!$admin && $user['cdeditor'] != "t") {
 	echo "<p><font color=red><b>You do not have the necessary privileges to do that!</b></font><p>";
 	echo "</BODY></HTML>";
 	exit;
@@ -38,8 +38,8 @@ if ($xref) {
 		exit;
 	}
 	$r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-	$xstatus = $r[status];
-	if ($user[admin] != "t" && $r[status] == 2) {
+	$xstatus = $r['status'];
+	if ($user['admin'] != "t" && $r['status'] == 2) {
 		echo "<p><b>You cannot edit that Entry - $xref</b>";
 		echo "</BODY>";
 		echo "</HTML>";
@@ -47,7 +47,7 @@ if ($xref) {
 	}
 }
 
-if ($xdodelete && $user[admin] == "t") {
+if ($xdodelete && $user['admin'] == "t") {
 	echo "<form action=cdedit.php method=post>";
 	echo "<input type=hidden name=xref value=$xref>";
 	echo "<input type=hidden name=xreallydelete value=yes>";
@@ -57,7 +57,7 @@ if ($xdodelete && $user[admin] == "t") {
 	echo "</form>";
 }
 
-if ($xdelyes && $user[admin] == "t") {
+if ($xdelyes && $user['admin'] == "t") {
 	$dquery = "DELETE FROM cd WHERE id = $q$xref$q;";
 	$dresult = pg_query($db, $dquery);
 	$dquery = "DELETE FROM cdtrack WHERE cdid = $q$xref$q;";
@@ -113,13 +113,13 @@ if ($xdosave || $xdoswap || $xdocreate) {
 	}
 }
 //Format text to save in database
-if (get_magic_quotes_gpc()) {
+// if (get_magic_quotes_gpc()) {
 		$xartist= stripslashes(pg_escape_string($xartist));
 		$xtitle=  stripslashes(pg_escape_string($xtitle));
 		$xcompany=stripslashes(pg_escape_string($xcompany));
 		$xcpa=    stripslashes(pg_escape_string($xcpa));
 		$xgenre=  stripslashes(pg_escape_string($xgenre));
-}
+// }
 
 
 if ($xdocreate) {
@@ -130,29 +130,39 @@ if ($xdocreate) {
 			VALUES ($q$xartist$q, $q$xtitle$q, $q$xyear$q,
 			$q$xgenre$q, $q$xcompany$q, $q$xcpa$q, $q$xarrivaldate$q,
 			$q$xcopies$q, $q$xcompilation$q, $q$xdemo$q, $q$xlocal$q,
-			$q$xfemale$q, $q$cid$q, $q$timenow$q, $q$cid$q, $q$timenow$q, $q$xcomment$q, $q$xstatus$q, $q$xformat$q);";
+			$q$xfemale$q, $q$cid$q, $q$timenow$q, $q$cid$q, $q$timenow$q, $q$xcomment$q, $q$xstatus$q, $q$xformat$q) RETURNING id;";
 	//echo "Insert query is $uquery";
 	//exit;
 	$uresult = pg_query($db, $uquery);
-	$lastoid = pg_last_oid($uresult);
-	$kquery = "SELECT id FROM cd WHERE OID = $q$lastoid$q;";
-	$kresult = pg_query($db, $kquery);
-	$r = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-	$xref = $r[id];
-	$trackcount = count($xtrackartist);
-	for ($i=0;$i<$trackcount;$i++) {
-//		Format track artist & title to save in database
-		$ytrackartist[$i]=pg_escape_string($xtrackartist[$i]);
-		$ytracktitle[$i]=pg_escape_string($xtracktitle[$i]);
-		$ii = $i+1;
-		$ttquery = "INSERT INTO cdtrack (cdid, tracknum, tracktitle, trackartist, tracklength)
-		VALUES ($xref, $ii,
-		$q$ytracktitle[$i]$q,
-		$q$ytrackartist[$i]$q,
-		$q$xtracklength[$i]$q);";
-		$ttresult = pg_query($db, $ttquery);
+
+	if ($uresult && pg_num_rows($uresult) > 0) {
+		$id_of_new_row = pg_fetch_row($uresult)[0];
+		$trackcount = count($xtrackartist);
+		
+		for ($i=0;$i<$trackcount;$i++) {
+			// Format track artist & title to save in database
+			$ytrackartist[$i]=pg_escape_string($xtrackartist[$i]);
+			$ytracktitle[$i]=pg_escape_string($xtracktitle[$i]);
+			$ii = $i+1;
+			$ttquery = "INSERT INTO cdtrack (
+				cdid, 
+				tracknum, 
+				tracktitle, 
+				trackartist, 
+				tracklength)
+			VALUES (
+				$id_of_new_row, 
+				$ii,
+				$q$ytracktitle[$i]$q,
+				$q$ytrackartist[$i]$q,
+				$q$xtracklength[$i]$q
+			);";
+
+			$ttresult = pg_query($db, $ttquery);
+		}
+
+		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$id_of_new_row);
 	}
-	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref);
 }
 
 if ($xdosave || $xdoswap) {
@@ -188,7 +198,7 @@ if ($xdosave || $xdoswap) {
 		#echo $tquery . "<p>";
 		$tresult = pg_query($db, $tquery);
 	}
-	if ($xdosave) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref); }
+	if ($xdosave) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref); }
 }
 
 if ($xdoswap) {
@@ -197,9 +207,9 @@ if ($xdoswap) {
 	$snum = pg_num_rows($sresult);
 	for ($i=0;$i<$snum;$i++) {
 		$sr = pg_Fetch_array($sresult, $i, PGSQL_ASSOC);
-		$title = addslashes($sr[tracktitle]);
-		$artist = addslashes($sr[trackartist]);
-		$id = $sr[trackid];
+		$title = addslashes($sr['tracktitle']);
+		$artist = addslashes($sr['trackartist']);
+		$id = $sr['trackid'];
 		$wquery = "UPDATE cdtrack SET tracktitle=$q$artist$q,
 			trackartist=$q$title$q WHERE trackid = $q$id$q;";
 		$wresult = pg_query($db, $wquery);
@@ -224,7 +234,7 @@ echo "<input type=hidden name=xref value=$xref>";
 
 if ($xref) {
 	echo "<p><input type=submit name=xdosave value=\"Save Changes\">";
-	if ($user[admin] == "t") {
+	if ($user['admin'] == "t") {
 		echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit name=xdodelete value=\"Delete Entry\">";
 	}
 }
@@ -236,23 +246,23 @@ echo "<p><TABLE border=1 cellpadding=3 cellspacing=0 bgcolor=#CCCCFF>";
 ?>
 <tr bgcolor="#CCCCFF">
 <td><b>ID Number</b></td>
-<td><?php $a=sprintf("%07.0f", $r[id]); echo "$a"; ?></td>
+<td><?php $a=sprintf("%07.0f", $r['id']); echo "$a"; ?></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Artist</b></td>
-<td><input type=text name=xartist value="<?php $a=htmlentities(stripslashes($r[artist])); echo "$a"; ?>" size=50 maxlength=150></td>
+<td><input type=text name=xartist value="<?php $a=htmlentities(stripslashes($r['artist'])); echo "$a"; ?>" size=50 maxlength=150></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Title</b></td>
-<td><input type=text name=xtitle value="<?php $a=htmlentities(stripslashes($r[title])); echo "$a"; ?>" size=50 maxlength=150></td>
+<td><input type=text name=xtitle value="<?php $a=htmlentities(stripslashes($r['title'])); echo "$a"; ?>" size=50 maxlength=150></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Release Year</b></td>
 <?php
-$a = $r[year];
+$a = $r['year'];
 if (!$xref) { $a = date("Y"); }
 if ($a == 0) { $a = ""; }
 ?>
@@ -261,29 +271,28 @@ if ($a == 0) { $a = ""; }
 
 <tr bgcolor="#CCCCFF">
 <td><b>Genre</b></td>
-<td><input type=text name=xgenre value="<?php $a=htmlentities(stripslashes($r[genre])); echo "$a"; ?>" size=50 maxlength=50></td>
+<td><input type=text name=xgenre value="<?php $a=htmlentities(stripslashes($r['genre'])); echo "$a"; ?>" size=50 maxlength=50></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Company</b></td>
-<td><input type=text name=xcompany value="<?php $a=htmlentities(stripslashes($r[company])); echo "$a"; ?>" size=50 maxlength=150></td>
+<td><input type=text name=xcompany value="<?php $a=htmlentities(stripslashes($r['company'])); echo "$a"; ?>" size=50 maxlength=150></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Country</b></td>
-<td><input type=text name=xcpa value="<?php $a=htmlentities(stripslashes($r[cpa])); echo "$a"; ?>" size=50 maxlength=150></td>
+<td><input type=text name=xcpa value="<?php $a=htmlentities(stripslashes($r['cpa'])); echo "$a"; ?>" size=50 maxlength=150></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
-<td><b>Arrival Date</b></td>
+<td><b>Arrival Date</b></td> 
 <?php
-//if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
-if ($r[arrivaldate] == -1 || $r[arrivaldate] == "") {
+if ($r['arrivaldate'] == -1 || $r['arrivaldate'] == "") {
 	$thedayN = $todayN;
 	$a = date ("d/m/Y");
 }
 else {
-	$thedayN = strtotime($r[arrivaldate]);
+	$thedayN = strtotime($r['arrivaldate']);
 	$a = date ("d/m/Y", $thedayN);
 }
 ?>
@@ -294,7 +303,7 @@ else {
 <td><b>Format</b></td>
 <td>
 <?php
-$a = $r[format];
+$a = $r['format'];
 if (!$xref) { $a = 1; }
 ?>
 <select name=xformat>
@@ -312,34 +321,34 @@ if (!$xref) { $a = 1; }
 
 <tr bgcolor="#CCCCFF">
 <td><b>Compilation</b></td><td>
-<input type=radio id=2 name=xcompilation value=1<?php if ($r[compilation] == 1) { echo " checked"; } ?>>No</input>
-<input type=radio id=2 name=xcompilation value=2<?php if ($r[compilation] == 2) { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xcompilation value=1<?php if ($r['compilation'] == 1) { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xcompilation value=2<?php if ($r['compilation'] == 2) { echo " checked"; } ?>>Yes</input>
 </td></tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Demo</b></td><td>
-<input type=radio id=2 name=xdemo value=1<?php if ($r[demo] == 1) { echo " checked"; } ?>>No</input>
-<input type=radio id=2 name=xdemo value=2<?php if ($r[demo] == 2) { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xdemo value=1<?php if ($r['demo'] == 1) { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xdemo value=2<?php if ($r['demo'] == 2) { echo " checked"; } ?>>Yes</input>
 </td></tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Local</b></td><td>
-<input type=radio id=2 name=xlocal value=1<?php if ($r[local] == 1) { echo " checked"; } ?>>No</input>
-<input type=radio id=2 name=xlocal value=2<?php if ($r[local] == 2) { echo " checked"; } ?>>Yes</input>
-<input type=radio id=2 name=xlocal value=3<?php if ($r[local] == 3) { echo " checked"; } ?>>Some</input>
+<input type=radio id=2 name=xlocal value=1<?php if ($r['local'] == 1) { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xlocal value=2<?php if ($r['local'] == 2) { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xlocal value=3<?php if ($r['local'] == 3) { echo " checked"; } ?>>Some</input>
 </td></tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Female</b></td><td>
-<input type=radio id=2 name=xfemale value=1<?php if ($r[female] == 1) { echo " checked"; } ?>>No</input>
-<input type=radio id=2 name=xfemale value=2<?php if ($r[female] == 2) { echo " checked"; } ?>>Yes</input>
-<input type=radio id=2 name=xfemale value=3<?php if ($r[female] == 3) { echo " checked"; } ?>>Some</input>
+<input type=radio id=2 name=xfemale value=1<?php if ($r['female'] == 1) { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xfemale value=2<?php if ($r['female'] == 2) { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xfemale value=3<?php if ($r['female'] == 3) { echo " checked"; } ?>>Some</input>
 </td></tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Copies</b></td>
 <?php
-$a=$r[copies];
+$a=$r['copies'];
 if ($a == "") { $a = 1; }
 if ($a == 0) { $a = ""; }
 ?>
@@ -347,17 +356,17 @@ if ($a == 0) { $a = ""; }
 </tr>
 
 <?php
-if ($user[admin] == "t") {
+if ($user['admin'] == "t") {
 	echo "<tr bgcolor=#CCCCFF>";
 	echo "<td><b>Status</b></td><td>";
 	echo "<input type=radio id=2 name=xstatus value=0";
-	if ($r[status] == 0) { echo " checked"; }
+	if ($r['status'] == 0) { echo " checked"; }
 	echo ">Unchecked</input>";
 	echo "<input type=radio id=2 name=xstatus value=1";
-	if ($r[status] == 1) { echo " checked"; }
+	if ($r['status'] == 1) { echo " checked"; }
 	echo ">Incomplete</input>";
 	echo "<input type=radio id=2 name=xstatus value=2";
-	if ($r[status] == 2) { echo " checked"; }
+	if ($r['status'] == 2) { echo " checked"; }
 	echo ">Final</input>";
 	echo "</td></tr>";
 }
@@ -365,7 +374,7 @@ if ($user[admin] == "t") {
 
 <tr valign=top bgcolor="#CCCCFF">
 <td><b>Editing<br>Comments</b></td><td>
-<textarea name="xcomment" rows="4" cols="50"><?php echo htmlentities(stripslashes($r[comment]))?></textarea></td>
+<textarea name="xcomment" rows="4" cols="50"><?php echo htmlentities(stripslashes($r['comment']))?></textarea></td>
 </td></tr>
 
 <?php
@@ -387,9 +396,9 @@ for ($i=0;$i<$num;$i++) {
 	if ($xref) { $r = pg_Fetch_array($result, $i, PGSQL_ASSOC); }
 	$ii = $i+1;
 	echo "<TR><TD align=center>" . $ii . "</TD>";
-	$a = htmlentities(stripslashes($r[trackartist]));
-	$b = htmlentities(stripslashes($r[tracktitle]));
-	$ttt = $r[tracklength];
+	$a = htmlentities(stripslashes($r['trackartist']));
+	$b = htmlentities(stripslashes($r['tracktitle']));
+	$ttt = $r['tracklength'];
 	$min = 0;
 	$min = floor($ttt/60);
 	$sec = $ttt % 60;
@@ -407,7 +416,7 @@ echo "</TABLE>";
 
 if ($xref) {
 	echo "<p><input type=submit name=xdosave value=\"Save Changes\">";
-	if ($user[admin] == "t") {
+	if ($user['admin'] == "t") {
 		echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=submit name=xdodelete value=\"Delete Entry\">";
 	}
 }

@@ -66,7 +66,7 @@ if ($xdoreallydelete && $admin) {
 		exit;
 	}
 	$r = pg_fetch_array($result, 0, PGSQL_ASSOC);
-	$delfile = $r[id];
+	$delfile = $r['id'];
 	unlink ("$filestore$xref");
 	$uquery = "DELETE FROM file WHERE id=$q$xref$q;";
 	$uresult = pg_query($db, $uquery);
@@ -128,9 +128,9 @@ $nresult = pg_query($db, $nquery);
 $nnum = pg_num_rows($nresult);
 for ($i=0;$i<$nnum;$i++) {
 	$nr = pg_Fetch_array($nresult, $i, PGSQL_ASSOC);
-	if ($admin || $nr[active] == 't' || $nr[id] == $r[category]) {
-		echo "<option value=" . $nr[id];
-		if ($nr[id] == $r[category]) { echo " selected"; }
+	if ($admin || $nr[active] == 't' || $nr['id'] == $r[category]) {
+		echo "<option value=" . $nr['id'];
+		if ($nr['id'] == $r[category]) { echo " selected"; }
 		echo ">".htmlentities($nr[name])."</option>";
 	}
 }

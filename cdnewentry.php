@@ -12,8 +12,8 @@
 <BODY onload="document.forms[0].xwords.focus()">
 
 <?php
-if (!$admin && $user[cdeditor] != "t") {
-	echo "<p><font color=red><b>You do not have the necessary privilages to do that!</b></font><p>";
+if (!$admin && $user['cdeditor'] != "t") {
+	echo "<p><font color=red><b>You do not have the necessary privileges to do that!</b></font><p>";
 	echo "</BODY></HTML>";
 	exit;
 }
@@ -70,11 +70,11 @@ if ($xwords && !$xfreedbsearch) {
 		for ($i=0;$i<$num;$i++) {
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 			
-			$a = htmlentities($r[artist]);
-			$b = htmlentities($r[title]);
+			$a = htmlentities($r['artist']);
+			$b = htmlentities($r['title']);
 			
 			if ($i) { echo "<br>"; } else { echo "<p>"; }
-			echo "<a HREF=cdshow.php?xref=" . $r[id];
+			echo "<a HREF=cdshow.php?xref=" . $r['id'];
 			echo ">$a / $b<a>\n";
 		}
 	}

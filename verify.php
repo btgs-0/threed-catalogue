@@ -3,7 +3,7 @@
 extract($_POST);
 extract($_GET);
 $cid = $_COOKIE["threed_id"];
-settype ($cid, integer);
+settype ($cid, "integer");
 $cpassword = $_COOKIE["threed_password"];
 if (!$cpassword) { $cpassword = "nuffin"; }
 
