@@ -1,4 +1,5 @@
 <?php require("verify.php");
+require_once("config.php");
 #### User has logged in and been verified ####
 
 header("Cache-Control: no-cache");
@@ -69,6 +70,6 @@ if ($admin) {
 ?>
 
 <p><a href=logout.php target=_parent><b>Logout</b></a>
-
+<p><small><b><?php echo $app_version ?></b></small></p>
 </BODY>
 </HTML>
