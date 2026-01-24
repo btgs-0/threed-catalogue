@@ -34,13 +34,13 @@ if ($xnew) {
 		$kresult = pg_query($db, $kquery);
 
 		if ($kresult && pg_num_rows($kresult) > 0) { 
-			header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/listsedit.php?gid=".$id_of_new_row);
+			header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/listsedit.php?gid=".$id_of_new_row);
 			exit;
 		}
 	}
 
 	// Just fall back to lists if any failure happens above.
-	header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/lists.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/lists.php");
 }
 ?>
 

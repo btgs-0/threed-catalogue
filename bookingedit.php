@@ -170,7 +170,7 @@ if ($command == "create") {
 		if ($result) {
 			echo "<p><b>EVENT HAS BEEN ADDED - ";
 			echo "<a href=bookings.php?xb=$xb&xdate=$xdate>Return to Bookings</b></a>\n";
-			header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate.'&xb='.$xb);
+			header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate.'&xb='.$xb);
 		}
 	}
 }
@@ -348,7 +348,7 @@ if ($command == "update") {
 		$uresult = pg_query($db, $uquery);
 		echo "<p><b>EVENT HAS BEEN UPDATED - ";
 		echo "<a href=bookings.php?xid=$xid&xdate=$xdate>Return to Bookings</b></a>\n";
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
 	}
 	else { $r['active'] = $thestatus; }
 }
@@ -407,7 +407,7 @@ if ($command == "delete") {
 
 		echo "<p><b>EVENT HAS BEEN DELETED - ";
 		echo "<a href=bookings.php?xid=$xid&xdate=$xdate>Return to Bookings</b></a>\n";
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
 	}
 }
 

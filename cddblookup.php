@@ -81,7 +81,7 @@ if ($xadd) {
 		$ttresult = pg_query($db, $ttquery);
 	}
 	
-	if ($kresult) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdedit.php?xref=".$xref); }
+	if ($kresult) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdedit.php?xref=".$xref); }
 	
 }
 ?>
@@ -94,7 +94,7 @@ if ($xadd) {
 
 <?php
 if ($id) {
-	$url = "http://www.gracenote.com/search/album_details.php?tui_id=".$id;
+	$url = "https://www.gracenote.com/search/album_details.php?tui_id=".$id;
 	$ch = curl_init ($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); 
 	curl_setopt ($ch, CURLOPT_HEADER, 0);

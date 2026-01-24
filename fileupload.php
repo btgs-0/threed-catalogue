@@ -53,11 +53,11 @@ if ($check) { # uploading a file
 			$res = move_uploaded_file($_FILES['xuserfile']['tmp_name'], "$filestore$id_of_new_row");
 			echo "<p>##$res##<P>";
 			echo "<p>FILE UPLOADED";
-			$goto = "Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/fileedit.php?xref=".$id_of_new_row;
+			$goto = "Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/fileedit.php?xref=".$id_of_new_row;
 			echo "<p>$goto";
 			header($goto);
 		} else {
-			header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
+			header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
 		}
 	}
 }

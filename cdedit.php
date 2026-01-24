@@ -161,7 +161,7 @@ if ($xdocreate) {
 			$ttresult = pg_query($db, $ttquery);
 		}
 
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$id_of_new_row);
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$id_of_new_row);
 	}
 }
 
@@ -198,7 +198,7 @@ if ($xdosave || $xdoswap) {
 		#echo $tquery . "<p>";
 		$tresult = pg_query($db, $tquery);
 	}
-	if ($xdosave) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref); }
+	if ($xdosave) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref); }
 }
 
 if ($xdoswap) {

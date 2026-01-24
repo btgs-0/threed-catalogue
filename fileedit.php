@@ -41,7 +41,7 @@ if ($xdodelete) {
 	status=1
 	WHERE id = $q$xref$q;";
 	$result = pg_query($db, $uquery);
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
 	exit;
 }
 
@@ -51,7 +51,7 @@ if ($xdoundelete) {
 	status=0
 	WHERE id = $q$xref$q;";
 	$result = pg_query($db, $uquery);
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
 	exit;
 }
 
@@ -70,7 +70,7 @@ if ($xdoreallydelete && $admin) {
 	unlink ("$filestore$xref");
 	$uquery = "DELETE FROM file WHERE id=$q$xref$q;";
 	$uresult = pg_query($db, $uquery);
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
 }
 
 
@@ -84,7 +84,7 @@ if ($xupdate) {
 	category=$q$xcat$q
 	WHERE id = $q$xref$q;";
 	$result = pg_query($db, $uquery);
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
 	exit;
 }
 

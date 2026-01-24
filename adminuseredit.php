@@ -82,7 +82,7 @@ if ($xupdate && $gid) {
 	adminbook=$q$xadminbook$q
 	WHERE id = $q$gid$q;";
 	$result = pg_query($db, $uquery);
-	if (!$error) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/users.php"); }
+	if (!$error) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/users.php"); }
 }
 ?>
 

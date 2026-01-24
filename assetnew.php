@@ -35,13 +35,13 @@ if ($xnew) {
 
 		if ($kresult && pg_num_rows($kresult) > 0) {
 			$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-			header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/assetedit.php?gid=".$kr['id']);
+			header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/assetedit.php?gid=".$kr['id']);
 			exit;
 		}
 	}
 
 	// Just go back to assets if there is any failure.
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/assets.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/assets.php");
 }
 ?>
 

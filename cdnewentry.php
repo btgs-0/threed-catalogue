@@ -86,7 +86,7 @@ if ($xfreedbsearch && $xwords) {
 	echo "<form action=cdedit.php method=post>";
 	$stuff = stripslashes($xwords);
 	$stuff = urlencode ($stuff);
-	$ch = curl_init ("http://www.gracenote.com/search/?query=$stuff&search_type=album");
+	$ch = curl_init ("https://www.gracenote.com/search/?query=$stuff&search_type=album");
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); 
 	curl_setopt ($ch, CURLOPT_HEADER, 0);
 	if ($webproxy) { curl_setopt ($ch, CURLOPT_PROXY, $webproxy); }

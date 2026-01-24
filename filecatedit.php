@@ -40,7 +40,7 @@ if ($xupdate && $gid) {
 	$xname = trim($xname);
 	$uquery = "UPDATE filecat SET name=$q$xname$q, active=$q$xactive$q WHERE id = $q$gid$q;";
 	$result = pg_query($db, $uquery);
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/filecats.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/filecats.php");
 	exit;
 }
 

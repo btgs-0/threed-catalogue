@@ -50,12 +50,12 @@ if ($xnew) {
 
 			if ($kresult && pg_num_rows($kresult) > 0) { 
 				$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-				header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/adminuseredit.php?gid=".$kr['id']);
+				header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/adminuseredit.php?gid=".$kr['id']);
 				exit;
 			}
 		}
 
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/users.php");
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/users.php");
 	}
 }
 ?>

@@ -39,13 +39,13 @@ if ($xnew) {
 		// Only go there if the query above was successful. If not, take the user back to the filecat page
 		if ($kresult && pg_num_rows($kresult) > 0) { 
 			$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-			header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecatedit.php?gid=".$kr['id']);
+			header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecatedit.php?gid=".$kr['id']);
 			exit;
 		}
 	}
 
 	// If the above query fails, then just go back to file categories.
-	header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecats.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecats.php");
 }
 ?>
 
